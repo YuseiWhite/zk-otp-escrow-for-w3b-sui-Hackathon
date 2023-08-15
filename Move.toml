@@ -1,9 +1,9 @@
 [package]
-name = "zk-nfp"
+name = "zk_nfp"
 version = "0.0.1"
 
 [dependencies]
 Sui = { git = "https://github.com/MystenLabs/sui.git", subdir = "crates/sui-framework/packages/sui-framework", rev = "framework/testnet" }
 
 [addresses]
-zk-nfp = "0x0"
+zk_nfp = "0x0"
