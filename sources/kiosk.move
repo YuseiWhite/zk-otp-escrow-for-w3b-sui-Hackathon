@@ -15,7 +15,7 @@ module zk_nfp::kiosk{
 
         // 1st transaction
         {
-            let ctx = test_scenario::ctx(scenario);
+            let ctx = &mut kiosk_test_utils::ctx();
             let (kiosk, kiosk_owner_cap) = kiosk_test_utils::get_kiosk(ctx);
             debug::print(&kiosk);
             debug::print(&kiosk_owner_cap);
