@@ -61,6 +61,16 @@ module zk_nfp::zk_nfp {
         input_password == correct_password
     }
 
+    // This is not the function in the production environment.
+    public entry fun verify_proof(
+        // expected that all arguments are taken off-chain
+        _vk: vector<u8>,
+        _public_inputs_bytes: vector<u8>,
+        _proof_points_bytes: vector<u8>
+    ): bool {
+        true
+    }
+
     public entry fun transfer(
         limited_card: Card,
         recipient: address,
