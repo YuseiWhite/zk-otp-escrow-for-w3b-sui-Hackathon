@@ -5,19 +5,19 @@ compiled_package_info:
     std: "0000000000000000000000000000000000000000000000000000000000000001"
     sui: "0000000000000000000000000000000000000000000000000000000000000002"
     zk_nfp: "0000000000000000000000000000000000000000000000000000000000000000"
-  source_digest: 24CA01578766CB749E51882FA5CD2099A0D9DBF43A91AAC65DB03CB540058A3B
+  source_digest: ABAFFFA499173CEE787C79EBFB32817347DBA530AED1D201AD61C5B68A3EF8FA
   build_flags:
-    dev_mode: false
-    test_mode: false
+    dev_mode: true
+    test_mode: true
     generate_docs: false
     generate_abis: false
     install_dir: ~
     force_recompilation: false
-    lock_file: "./Move.lock"
+    lock_file: ~
     additional_named_addresses: {}
     fetch_deps_only: false
     skip_fetch_latest_git_deps: false
-    default_flavor: sui
+    default_flavor: ~
     default_edition: ~
 dependencies:
   - MoveStdlib
