@@ -1,5 +1,5 @@
 module zk_nfp::zk_nfp {
-        use std::string;
+    use std::string;
 
     use sui::event;
     use sui::object::{Self, ID, UID};
