@@ -85,6 +85,10 @@ module zk_nfp::zk_nfp {
         object::delete(id)
     }
 
+    // public fun fetch_card_id(card: &Card): UID {
+    //     &card.id
+    // }
+
     #[test]
     fun test_transfer_to_user_input_correct_pwd() {
         use sui::test_scenario;
@@ -174,4 +178,34 @@ module zk_nfp::zk_nfp {
 
         test_scenario::end(scenario_val);
     }
+
+    // #[test]
+    // fun test_fetch_card_id() {
+    //     use std::debug;
+    //     use sui::test_scenario;
+
+    //     let data_holder = @0xCAFE;
+
+    //     let scenario_val = test_scenario::begin(data_holder);
+    //     let scenario = &mut scenario_val;
+    //     {
+    //         mint(
+    //             b"CardX",
+    //             1,
+    //             5_000,
+    //             3_500,
+    //             test_scenario::ctx(scenario)
+    //         )
+    //     };
+
+    //     test_scenario::next_tx(scenario, data_holder);
+    //     {
+    //         let card = test_scenario::take_from_sender<Card>(scenario);
+    //         let id = fetch_card_id(card);
+    //         debug::print(&id);
+    //         burn(card)
+    //     };
+
+    //     test_scenario::end(scenario_val);
+    // }
 }
