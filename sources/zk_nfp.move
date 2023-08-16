@@ -86,7 +86,7 @@ module zk_nfp::zk_nfp {
     }
 
     #[test]
-    fun test_transfer_to_verified_user() {
+    fun test_transfer_to_user_input_correct_pwd() {
         use sui::test_scenario;
 
         let data_holder = @0xCAFE;
