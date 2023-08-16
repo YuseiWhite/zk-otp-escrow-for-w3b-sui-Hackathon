@@ -1,10 +1,12 @@
 module zk_nfp::owner_cap {
-    use sui::transfer;
     use std::string::String;
     use std::option::{Self, Option};
+
+    use sui::transfer;
+    use sui::event;
     use sui::package::{Self, Publisher};
     use sui::tx_context::{sender, TxContext};
-    use sui::object::{Self, UID};
+    use sui::object::{Self, ID, UID};
     use sui::transfer_policy::{
         Self as policy,
         TransferPolicyCap
@@ -48,6 +50,12 @@ module zk_nfp::owner_cap {
         defense: u64,
         limited: bool,
         image_url: Option<String>,
+    }
+
+    struct MintCardEvent has copy, drop {
+        object_id: ID,
+        creator: address,
+        name: String,
     }
 
     /// one time witness for initialization
@@ -109,10 +117,10 @@ module zk_nfp::owner_cap {
         limited: bool,
         image_url: Option<String>,
         ctx: &mut TxContext
-    ): Card {
+    ) {
         assert!(option::is_none(&cap.max_supply) || *option::borrow(&cap.max_supply) > cap.minted, ECapReached);
         cap.minted = cap.minted + 1;
-        Card {
+        let limited_card = Card {
             id: object::new(ctx),
             name,
             level,
@@ -120,6 +128,44 @@ module zk_nfp::owner_cap {
             defense,
             limited,
             image_url,
-        }
+        };
+        let data_holder = sender(ctx);
+        event::emit(MintCardEvent {
+            object_id: object::uid_to_inner(&limited_card.id),
+            creator: data_holder,
+            name: limited_card.name,
+        });
+        transfer::public_transfer(limited_card, data_holder);
+    }
+
+    // This is not the function in the production environment.
+    public fun verify_proof(
+        // expected that all arguments are taken off-chain
+        _vk: vector<u8>,
+        _public_inputs_bytes: vector<u8>,
+        _proof_points_bytes: vector<u8>,
+    ): bool {
+        true
+    }
+
+    public fun transfer(
+        limited_card: Card,
+        recipient_user: address,
+        _: &mut TxContext,
+    ) {
+        transfer::public_transfer(limited_card, recipient_user)
+    }
+
+    public entry fun burn(card: Card) {
+        let Card {
+            id,
+            name: _,
+            level: _,
+            attack: _,
+            defense: _,
+            limited: _,
+            image_url: _,
+        } = card;
+        object::delete(id)
     }
 }
