@@ -1,0 +1,79 @@
+[tasks."hot"]
+dependencies = [
+  "prove",
+  "verify",
+]
+
+[tasks."prove"]
+dependencies = [
+  "build:circuit",
+  "build:proof",
+]
+
+[tasks."verify"]
+script = '''
+cd scripts
+bun src/verify.ts
+'''
+
+[tasks."build:circuit"]
+script = '''
+cd circuit
+bun i
+circom main.circom --r1cs --wasm
+'''
+
+[tasks."build:proof"]
+script = '''
+cd prover
+cargo run --bin build_prover_inputs
+cargo run --bin build_proof
+'''
+
+[tasks."snarkjs:prove"]
+dependencies = [
+  "build:circuit",
+  "snarkjs:setup",
+  "snarkjs:proof",
+  "snarkjs:values",
+]
+
+[tasks."snarkjs:setup"]
+script = '''
+# セットアップの初期フェーズを開始し、新しいPowers of Tauファイルを生成します。
+cd trusted_setup
+
+# bn254カーブを使用して、12の次数のPowers of Tauセレモニーを開始します。
+snarkjs powersoftau new bn254 12 pot12_0000.ptau -v
+
+# 既存のPowers of Tauファイルに寄与を追加して新しいファイルを生成します。
+snarkjs powersoftau contribute pot12_0000.ptau pot12_0001.ptau --name="First contribution" -v
+
+# Phase 2の準備のためにPowers of Tauファイルを変換します。
+snarkjs powersoftau prepare phase2 pot12_0001.ptau pot12_final.ptau -v
+
+# R1CS制約ファイルとPowers of Tauファイルを使用して、新しいzkeyファイルを生成します。
+snarkjs zkey new ../circuit/main.r1cs pot12_final.ptau circuit_0000.zkey
+
+# 既存のzkeyファイルに寄与を追加して新しいzkeyファイルを生成します。
+snarkjs zkey contribute circuit_0000.zkey circuit_0001.zkey --name="First contribution" -v
+
+# zkeyファイルから検証キーをエクスポートしてJSONファイルに保存します。
+snarkjs zkey export verificationkey circuit_0001.zkey verification_key.json
+'''
+
+[tasks."snarkjs:proof"]
+script = '''
+cd prover-snarkjs
+# ウィットネスの計算
+snarkjs wtns calculate ../circuit/main_js/main.wasm input.json witness.wtns
+
+# groth16の証明の生成
+snarkjs groth16 prove ../trusted_setup/circuit_0001.zkey witness.wtns proof.json public.json
+'''
+
+[tasks."deploy:sui"]
+script = '''
+cd contracts/zkescrow
+sui client publish --gas-budget 123456789 --skip-dependency-verification
+'''
