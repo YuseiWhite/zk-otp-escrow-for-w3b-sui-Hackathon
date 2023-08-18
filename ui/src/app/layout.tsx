@@ -6,6 +6,8 @@ import {
   WalletProvider,
   AllDefaultWallets
 } from '@suiet/wallet-kit';
+import toast, { Toaster } from 'react-hot-toast';
+
 
 export default function RootLayout({
   children,
@@ -17,6 +19,7 @@ export default function RootLayout({
       <WalletProvider defaultWallets={AllDefaultWallets}>
         <body className="bg-base-300">{children}</body>
       </WalletProvider>
+      <Toaster />
     </html>
   )
 }

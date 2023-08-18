@@ -7,7 +7,7 @@ import {
 import { useState } from 'react';
 import { AppBar } from 'src/components/AppBar';
 import ChatInput from 'src/components/ChatInput';
-import { moveCallDoUnlock, moveCallMintAndTransferMyHero, moveCallOffer } from 'src/moveCall/zk-escrow';
+import { moveCallDoUnlock, moveCallDoZKUnlock, moveCallMintAndTransferMyHero, moveCallOffer } from 'src/moveCall/zk-escrow';
 // import { moveCallListItem, moveCallNewKiosk } from 'src/contract/moveCall';
 
 const Page = () => {
@@ -39,20 +39,6 @@ const Page = () => {
 
   const MainPart = () => (
     <div className="text-white flex flex-col gap-[40px]">
-      {
-        partList.map(({ label, annotation, text, setText }) => (
-          <div key={label} className="text-sm mb-4 flex items-center gap-10">
-            <span className="flex items-center justify-end text-2xl w-[240px]">
-              {label}
-            </span>
-            <div>
-              {annotation}
-              <ChatInput {...{ text, setText }} />
-            </div>
-          </div>
-        ))
-      }
-
       <button className="text-white bg-blue-500 rounded-md px-4 py-2 max-w-120"
         onClick={async () => {
           if (!address) return
@@ -82,7 +68,7 @@ const Page = () => {
           if (!address) return
 
           const txb = new TransactionBlock()
-          moveCallDoUnlock({txb})
+          moveCallDoUnlock({ txb })
 
           const result = await signAndExecuteTransactionBlock({
             // @ts-ignore
@@ -94,6 +80,44 @@ const Page = () => {
         }}
       >
         do unlock
+      </button>
+
+      <button className="text-white bg-blue-500 rounded-md px-4 py-2 max-w-120"
+        onClick={async () => {
+          if (!address) return
+
+          const txb = new TransactionBlock()
+          moveCallDoZKUnlock({ txb })
+
+          const result = await signAndExecuteTransactionBlock({
+            // @ts-ignore
+            transactionBlock: txb,
+          });
+          console.log({ result })
+          const url = `https://suiexplorer.com/txblock/${result.digest}?network=testnet`
+          console.log(url)
+        }}
+      >
+        do zk unlock
+      </button>
+
+      <button className="text-white bg-blue-500 rounded-md px-4 py-2 max-w-120"
+        onClick={async () => {
+          if (!address) return
+
+          const txb = new TransactionBlock()
+          moveCallDoZKUnlock({ txb })
+
+          const result = await signAndExecuteTransactionBlock({
+            // @ts-ignore
+            transactionBlock: txb,
+          });
+          console.log({ result })
+          const url = `https://suiexplorer.com/txblock/${result.digest}?network=testnet`
+          console.log(url)
+        }}
+      >
+        maybe Fail zk unlock
       </button>
       {/* <button className="text-white bg-blue-500 rounded-md px-4 py-2"
         onClick={async () => {
