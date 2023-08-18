@@ -28,7 +28,7 @@ export const moveCallMintMyHero = (props: {
 
 export const moveCallJustDo = async (props: {
   txb: TransactionBlock;
-  hero: string,
+  hero: string;
 }) => {
   const { txb } = props;
   txb.moveCall({
@@ -92,8 +92,6 @@ export const moveCallDoZKUnlock = async (props: {
     ],
   });
 };
-
-
 
 // export const moveCallDoUnlock = async (props: {
 //   txb: TransactionBlock;

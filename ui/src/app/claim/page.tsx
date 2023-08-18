@@ -9,6 +9,7 @@ import { useState } from 'react';
 import { AppBar } from 'src/components/AppBar';
 import ChatInput from 'src/components/ChatInput';
 import { moveCallDoUnlock, moveCallDoZKUnlock, moveCallJustDo, moveCallMintAndTransferMyHero, moveCallMintMyHero, moveCallOffer } from 'src/moveCall/zk-escrow';
+import { sleep } from 'src/utils';
 import { generateOneTimeCode, hashWithSHA256, shortenAddress } from 'src/utils/web3';
 // import { moveCallListItem, moveCallNewKiosk } from 'src/contract/moveCall';
 
@@ -16,32 +17,9 @@ const imageUrl = "https://user-images.githubusercontent.com/14998939/256967328-b
 
 const Page = () => {
   const { address } = useWallet();
-  const [whom, setWhom] = useState<string>("");
-  const [which, setWhich] = useState<string>("");
-  const [howmuch, setHowmuch] = useState<string>("");
+  const [proofIsDone, setProofIsDone] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  let onetimeCode = generateOneTimeCode()
-
-  const partList = [
-    {
-      label: "To whom?",
-      annotation: 'Google mail address: name@gmail.com',
-      text: whom,
-      setText: setWhom,
-    },
-    {
-      label: "Which object?",
-      annotation: 'object Id',
-      text: which,
-      setText: setWhich,
-    },
-    {
-      label: "How much?",
-      annotation: 'SUI',
-      text: howmuch,
-      setText: setHowmuch,
-    },
-  ]
 
   const MainPart = () => (
     <div className="text-white flex flex-col gap-[40px]">
@@ -68,34 +46,52 @@ const Page = () => {
               </span>
               <ChatInput />
             </div>
-            <button className="text-white bg-blue-500 rounded-md px-4 py-2 max-w-120"
-              onClick={async () => {
-                if (!address) return
+            <div className='flex flex-col gap-5 w-[200px]'>
+              <button className={`relative text-white bg-blue-500 rounded-md px-4 py-2 max-w-120 ${isLoading ? 'opacity-50 cursor-not-allowed' : ''}`}
+                onClick={async () => {
+                  setIsLoading(true); // ローディング開始
+                  await sleep(3000);
+                  setProofIsDone(true);
+                  setIsLoading(false); // ローディング終了
+                }}
+                disabled={isLoading} // ローディング中はボタンを無効化
+              >
+                <div className={`absolute inset-0 flex items-center justify-center ${isLoading ? '' : 'opacity-0'}`}>
+                  <div className="animate-spin w-5 h-5 border-t-2 border-white rounded-full"></div>
+                </div>
+                <span className={`${isLoading ? 'opacity-0' : ''}`}>
+                  {proofIsDone ? "proof is done" : "proof generation"}
+                </span>
+              </button>
+              <button className="text-white bg-blue-500 rounded-md px-4 py-2 max-w-120"
+                onClick={async () => {
+                  if (!address) return
 
-                const txb = new TransactionBlock()
-                let hero = moveCallMintMyHero({
-                  txb,
-                  name: "My Hero",
-                  imageUrl,
-                  sendToAddress: address,
-                })
-                txb.transferObjects([hero], txb.pure(address));
-                // moveCallJustDo({
-                //   txb,
-                //   hero,
-                // })
+                  const txb = new TransactionBlock()
+                  let hero = moveCallMintMyHero({
+                    txb,
+                    name: "My Hero",
+                    imageUrl,
+                    sendToAddress: address,
+                  })
+                  txb.transferObjects([hero], txb.pure(address));
+                  // moveCallJustDo({
+                  //   txb,
+                  //   hero,
+                  // })
 
-                const result = await signAndExecuteTransactionBlock({
-                  // @ts-ignore
-                  transactionBlock: txb,
-                });
-                console.log({ result })
-                const url = `https://suiexplorer.com/txblock/${result.digest}?network=testnet`
-                console.log(url)
-              }}
-            >
-              claim
-            </button>
+                  const result = await signAndExecuteTransactionBlock({
+                    // @ts-ignore
+                    transactionBlock: txb,
+                  });
+                  console.log({ result })
+                  const url = `https://suiexplorer.com/txblock/${result.digest}?network=testnet`
+                  console.log(url)
+                }}
+              >
+                claim
+              </button>
+            </div>
           </div>
         </div>
       </div>

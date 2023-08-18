@@ -30,7 +30,8 @@ export const generateOneTimeCode = () => {
   const hash = CryptoJS.HmacSHA256(currentMinute.toString(), secretKey);
 
   // ハッシュの結果をmodulo 1000000で処理して、6桁の数字に制限
-  const oneTimeCode = (parseInt(hash.toString(CryptoJS.enc.Hex), 16) % 1000000).toString().padStart(6, '0');
+  const oneTimeCode = (parseInt(hash.toString(CryptoJS.enc.Hex), 16) % 1000000)
+    .toString().padStart(6, "0");
 
   return oneTimeCode;
 };
