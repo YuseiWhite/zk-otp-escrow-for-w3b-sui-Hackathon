@@ -1,4 +1,4 @@
-module zk_nfp::zk_nfp {
+module zk_escrow::zk_escrow {
     use std::string;
 
     use sui::event;

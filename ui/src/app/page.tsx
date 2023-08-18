@@ -6,11 +6,10 @@ import {
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import ChatInput from 'src/components/ChatInput';
-import { PostCard } from 'src/components/PostCard';
 import { SuiObjectLinkButton } from 'src/components/SuiObjectLinkButton';
 import { SUITTER_PACKAGE_ID, SUITTER_RECENT_POSTS_OBJECT_ID } from 'src/config/constants';
-import { getRecentPostIdList, getRecentPostObjectList } from 'src/suitterLib/client';
-import { SuitterPost } from 'src/suitterLib/types';
+import { getRecentPostIdList, getRecentPostObjectList } from 'src/moveCall/client';
+import { SuitterPost } from 'src/moveCall/types';
 
 /**
  * WalletConnectButton コンポーネント
@@ -81,18 +80,7 @@ const Page = () => {
   const CenterPart = () => (
     <div className="w-1/2 p-4 border-slate-600 border-x-[0.5px] flex flex-col h-screen">
       <div className="font-bold text-lg mb-4 text-white">Timeline</div>
-      <div className="overflow-auto flex-grow gap-1">
-        {
-          recentPostList.map((post) => (
-            <>
-              <PostCard key={post.id} post={post} />
-              {/* <hr className="bg-slate-900 h-[0.5px]" /> */}
-            </>
-          ))
-        }
-      </div>
       <div className="mt-auto">
-        <ChatInput />
       </div>
     </div>
   )

@@ -1,4 +1,4 @@
-module zk_nfp::owner_cap {
+module zk_escrow::owner_cap {
     use std::string::String;
     use std::option::{Self, Option};
 

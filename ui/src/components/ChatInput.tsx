@@ -1,40 +1,19 @@
 
 import { TransactionBlock } from '@mysten/sui.js';
 import { useWallet } from '@suiet/wallet-kit';
-import { useState } from 'react';
-import { moveCallCreatePost } from 'src/suitterLib/moveCall';
+import { Dispatch, SetStateAction, useState } from 'react';
 
 /**
  * ChatInput コンポーネント
  * @returns
  */
-const ChatInput = () => {
-  const { signAndExecuteTransactionBlock } = useWallet();
-
-  /**
-   * exctuteCreatePost メソッドを呼び出してPostを追加する。
-   */
-  const exctuteCreatePost = async () => {
-    const txb = new TransactionBlock();
-    // moveCallCreatePostメソッドを呼び出す
-    moveCallCreatePost({
-      txb,
-      text: message
-    });
-
-    const result = await signAndExecuteTransactionBlock({
-      // @ts-ignore
-      transactionBlock: txb,
-    });
-    console.log({ result })
-    const url = `https://suiexplorer.com/txblock/${result.digest}?network=testnet`
-    console.log(url)
-  }
-
-  const [message, setMessage] = useState("");
+const ChatInput = (props: {
+  text: string,
+  setText: Dispatch<SetStateAction<string>>
+}) => {
 
   const handleInputChange = (event: any) => {
-    setMessage(event.target.value);
+    props.setText(event.target.value);
   };
 
 
@@ -43,20 +22,9 @@ const ChatInput = () => {
       <input
         className="w-full px-4 py-2 text-white bg-gray-900 rounded-md focus:outline-none"
         placeholder="Please enter messege..."
-        value={message}
+        value={props.text}
         onChange={handleInputChange}
       />
-      <button
-        className="ml-4 text-white bg-blue-500 rounded-md px-4 py-2"
-        onClick={async (event: any) => {
-          event.preventDefault();
-          // exctuteCreatePost メソッドの呼び出し
-          await exctuteCreatePost();
-          setMessage("");
-        }}
-      >
-        Send
-      </button>
     </div>
   );
 };

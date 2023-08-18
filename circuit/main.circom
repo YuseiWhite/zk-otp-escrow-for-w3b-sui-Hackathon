@@ -11,17 +11,18 @@ template HashCheckWithTimeLimit() {
     // Ensure that the current timestamp is before the expiry timestamp.
     assert(currentTimestamp < expiryTimestamp);
 
-    component bitsSecretCode = Num2Bits(256);
-    bitsSecretCode.in <== secretCode;
+    // component bitsSecretCode = Num2Bits(256);
+    // bitsSecretCode.in <== secretCode;
 
-    component hash = Sha256(256);
-    hash.in <== bitsSecretCode.out;
+    // component hash = Sha256(256);
+    // hash.in <== bitsSecretCode.out;
 
-    component hashResult = Bits2Num(256);
-    hashResult.in <== hash.out;
+    // component hashResult = Bits2Num(256);
+    // hashResult.in <== hash.out;
 
-    // Ensure that the hash of the secretCode matches the publicHash.
-    publicHash === hashResult.out;
+    // // Ensure that the hash of the secretCode matches the publicHash.
+    // publicHash === hashResult.out;
+
 }
 
 component main = HashCheckWithTimeLimit();

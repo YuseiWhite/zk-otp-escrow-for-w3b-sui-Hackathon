@@ -74,6 +74,6 @@ snarkjs groth16 prove ../trusted_setup/circuit_0001.zkey witness.wtns proof.json
 
 [tasks."deploy:sui"]
 script = '''
-cd contract
+cd contracts/zkescrow
 sui client publish --gas-budget 123456789 --skip-dependency-verification
 '''

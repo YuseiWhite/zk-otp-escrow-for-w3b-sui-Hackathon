@@ -11,7 +11,9 @@ path = "src/bin/build_prover_inputs.rs"
 name = "build_proof"
 path = "src/bin/build_proof.rs"
 
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+[[bin]]
+name = "try"
+path = "src/bin/try.rs"
 
 [dependencies]
 anyhow = "1.0.72"

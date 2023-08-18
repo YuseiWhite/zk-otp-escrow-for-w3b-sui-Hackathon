@@ -1,4 +1,4 @@
-module zk_nfp::proof_policy {
+module zk_escrow::proof_policy {
     use sui::transfer_policy::{
         Self as policy,
         TransferPolicy,
@@ -12,7 +12,7 @@ module zk_nfp::proof_policy {
     struct Rule<phantom Proof: drop> has drop {}
 
     /// `Config` is not required because there are no variables to be input by data_holder.
-    
+
     /// data holder action
     public fun set<T, Proof: drop>(
         policy: &mut TransferPolicy<T>,
@@ -49,7 +49,7 @@ module zk_nfp::proof_policy {
 }
 
 #[test_only]
-module zk_nfp::proof_policy_test {
+module zk_escrow::proof_policy_test {
     // use std::debug;
     use sui::transfer_policy::{
         Self as policy,
@@ -63,7 +63,7 @@ module zk_nfp::proof_policy_test {
     };
     use sui::tx_context::{Self, TxContext};
 
-    use zk_nfp::proof_policy;
+    use zk_escrow::proof_policy;
 
     struct Proof has drop {}
 

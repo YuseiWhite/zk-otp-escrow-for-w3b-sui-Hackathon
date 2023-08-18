@@ -1,4 +1,4 @@
-module zk_nfp::nfp_kiosk{
+module zk_escrow::nfp_kiosk{
     use std::debug;
     use std::string;
     use std::option::{Self, Option};
@@ -64,7 +64,7 @@ module zk_nfp::nfp_kiosk{
 }
 
 #[test_only]
-module zk_nfp::nfp_kiosk_test{
+module zk_escrow::nfp_kiosk_test{
     use std::debug;
 
     use sui::kiosk;
@@ -86,8 +86,8 @@ module zk_nfp::nfp_kiosk_test{
         TransferPolicyCap
     };
 
-    use zk_nfp::proof_policy;
-    use zk_nfp::nfp_kiosk::{Self, Card};
+    use zk_escrow::proof_policy;
+    use zk_escrow::nfp_kiosk::{Self, Card};
 
     struct Proof has drop {}
 
@@ -96,12 +96,12 @@ module zk_nfp::nfp_kiosk_test{
     fun test_user_can_get_card() {
         let data_holder = @0xCAFE;
         let user = @0xBEEF;
-        
+
         let scenario_val = test_scenario::begin(data_holder);
         let scenario = &mut scenario_val;
         {
             // mint() `cardX`
-            // let card = 
+            // let card =
             nfp_kiosk::mint(
                 b"CardX",
                 1,
