@@ -3,6 +3,14 @@ edition = "2021"
 name = "utils"
 version = "0.1.0"
 
+[[bin]]
+name = "build_prover_inputs"
+path = "src/bin/build_prover_inputs.rs"
+
+[[bin]]
+name = "build_proof"
+path = "src/bin/build_proof.rs"
+
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
@@ -19,6 +27,7 @@ ark-serialize = "0.4.1"
 ark-std = "0.4.0"
 blst = "0.3.10"
 byte-slice-cast = "1.2.2"
+chrono = "0.4.26"
 derive_more = "0.99.16"
 fastcrypto = "0.1.5"
 fastcrypto-zkp = "0.1.1"
@@ -33,3 +42,4 @@ rustc-hex = "2.1.0"
 schemars = "0.8.10"
 serde = {version = "1.0.183", features = ["derive"]}
 serde_json = "1.0.104"
+sha2 = "0.10.7"

@@ -65,6 +65,9 @@ pub fn verify_groth16(
 type CircomInput = HashMap<String, Vec<num_bigint::BigInt>>;
 
 fn verify_proof_with_r1cs(inputs: CircomInput, wasm_path: &str, r1cs_path: &str) {
+    dbg!("inputs", &inputs);
+    dbg!("#1");
+
     // Load the WASM and R1CS for witness and proof generation
     let cfg = CircomConfig::<Curve>::new(wasm_path, r1cs_path).unwrap();
 
@@ -75,20 +78,27 @@ fn verify_proof_with_r1cs(inputs: CircomInput, wasm_path: &str, r1cs_path: &str)
             builder.push_input(&k, e);
         }
     }
+    dbg!("#2");
     // Create an empty instance for setting it up
     let circuit = builder.setup();
 
+    dbg!("#3");
     // Run a trusted setup
     let mut rng = thread_rng();
     let params =
         Groth16::<Curve>::generate_random_parameters_with_reduction(circuit, &mut rng).unwrap();
 
+    dbg!("#4");
     // Get the populated instance of the circuit with the witness
     let circuit = builder.build().unwrap();
 
+    dbg!("#5");
     let inputs = circuit.get_public_inputs().unwrap();
+    dbg!("#6");
     let proof = Groth16::<Curve>::prove(&params, circuit, &mut rng).unwrap();
+    dbg!("#7");
     let pvk = Groth16::<Curve>::process_vk(&params.vk).unwrap();
+    dbg!("#8");
 
     let verified = Groth16::<Curve>::verify_proof(&pvk, &proof, &inputs).unwrap();
     dbg!("verified", &verified);
@@ -165,7 +175,7 @@ fn verify_proof_with_r1cs(inputs: CircomInput, wasm_path: &str, r1cs_path: &str)
 
 fn main() {
     verify_proof_with_r1cs(
-        load_public_inputs_from_file("../circuit/public_inputs.json"),
+        load_public_inputs_from_file("prover_inputs.json"),
         "../circuit/main_js/main.wasm",
         "../circuit/main.r1cs",
     );

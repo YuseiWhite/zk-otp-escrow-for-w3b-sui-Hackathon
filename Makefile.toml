@@ -26,7 +26,8 @@ circom main.circom --r1cs --wasm
 [tasks."build:proof"]
 script = '''
 cd prover
-cargo run
+cargo run --bin build_prover_inputs
+cargo run --bin build_proof
 '''
 
 [tasks."snarkjs:prove"]
