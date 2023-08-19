@@ -4,26 +4,28 @@ import {
 } from "@mysten/sui.js/transactions";
 import { VerifierInputs } from "src/types";
 
-// https://suiexplorer.com/txblock/Bqik3cfmFZbRr46oFjNkBen9ZNXUArKy6pGCECCJpiCb?network=testnet
+// https://suiexplorer.com/txblock/3T2AeoYRC6cdYQyYbgpES8BdhXxpqqQs5ASKXZdip8rk?network=testnet
+
 export const PACKAGE_ID =
-  "0x661fefd2ea8bd62959eae9f0033ab5cd4f5991f03a8053178b1f73d09e880704";
+  "0x7f590f43d7ce9aa5985ad894fe7147d26ccba3a3212cd2425d8ea94aa49fd5b2";
 
 export const PUBLISHER_ID =
-  "0x5dab2dd2b22eddb4ce16d92b75faa95dc691065448abc3f046131d26bd3930ba";
+  "0xa4cdba799eb17ce5b1d8f5195324daf0c41d1471493a89dd30cfd7c23f31383b";
 
 export const KIOSK_ID =
-  "0xa6ce5e22113a513718ba15bb5e895d428244e5e8bb7fbe4a42d4c41c4b9c58a2";
+  "0x7feda756d93ffafbe2e3b6e329c75e757a3b8d5bf0547a755435b1e794f6e456";
 
 export const KIOSK_CAP_ID =
-  "0xbdd6f1ef21d03ee1392a599c4868822b21d7fc6e0653d51c08b41f59dc5adda9";
+  "0xdccdd4ec556b08b40bcf147be017ed84af6824e4e78ae2069b0e4268e307d9bf";
 
 export const POLICY_ID =
-  "0x8e12e3e952894f606f6814cd218fc0933a04ea071ab9adc544cb155d87759b0c";
+  "0x324ed38a73f61cff82344564866aa44de40b81a9623d7d6128775e844f264025";
 
 export const POLICY_CAP_ID =
-  "0x5b1a2e460ce2aa1aefacaff53f6bd186c8395f15460bc3e4082e4dff3d202243";
+  "0xfce4b6b629c26399bc0ffe319906831421fb283d9657d7f332d256eea8c806db";
 
-export const TARGET_ASSET_ID = "";
+export const TARGET_ASSET_ID =
+  "0x58fb671a164975dfb325d3ae855c62ad3b251950df3f0a6f9e8ec881ca49f5c0";
 
 export const mintMyHero = (props: {
   txb: TransactionBlock;
@@ -160,7 +162,7 @@ export const resolveProofPolicyAndConfirmRequestWithCorrectProof = async (
   resolveProofPolicyAndConfirmRequest({
     ...props,
     verifierInputs: verifiedInputsSample,
-  })
+  });
 };
 
 /// SHOULD BE
