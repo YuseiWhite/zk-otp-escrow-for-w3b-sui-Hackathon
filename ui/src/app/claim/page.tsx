@@ -104,6 +104,75 @@ const Page = () => {
               >
                 claim
               </button>
+
+              <button className="h-10 text-white text-sm bg-blue-500 rounded-md px-4 py-2 max-w-120"
+                onClick={async () => {
+                  if (!address) return;
+                  if (!claimableObjectId) return;
+                  const txb = new TransactionBlock();
+                  const zero_coin = txb.moveCall({
+                    target: '0x2::coin::zero',
+                    typeArguments: ['0x2::sui::SUI'],
+                  });
+                  const [claimedAsset, transferRequest] = moveCallKiosk.purchase(
+                    txb,
+                    `${moveCallZKEscrow.PACKAGE_ID}::my_hero::Hero`,
+                    txb.pure(moveCallZKEscrow.KIOSK_ID),
+                    claimableObjectId,
+                    zero_coin,
+                  );
+                  moveCallZKEscrow.resolveProofPolicyAndConfirmRequestWithBrokenProof({
+                    txb,
+                    type: `${moveCallZKEscrow.PACKAGE_ID}::my_hero::Hero`,
+                    policy_id: moveCallZKEscrow.POLICY_ID,
+                    transferRequest,
+                  })
+                  txb.transferObjects([claimedAsset], txb.pure(address, 'address'));
+
+                  const result = await signAndExecuteTransactionBlock({
+                    // @ts-ignore
+                    transactionBlock: txb,
+                  });
+                  const url = `https://suiexplorer.com/txblock/${result.digest}?network=testnet`;
+                  console.log(url);
+                }}
+              >
+                claim with broken proof
+              </button>
+              <button className="h-10 text-white text-sm bg-blue-500 rounded-md px-4 py-2 max-w-120"
+                onClick={async () => {
+                  if (!address) return;
+                  if (!claimableObjectId) return;
+                  const txb = new TransactionBlock();
+                  const zero_coin = txb.moveCall({
+                    target: '0x2::coin::zero',
+                    typeArguments: ['0x2::sui::SUI'],
+                  });
+                  const [claimedAsset, transferRequest] = moveCallKiosk.purchase(
+                    txb,
+                    `${moveCallZKEscrow.PACKAGE_ID}::my_hero::Hero`,
+                    txb.pure(moveCallZKEscrow.KIOSK_ID),
+                    claimableObjectId,
+                    zero_coin,
+                  );
+                  moveCallZKEscrow.resolveProofPolicyAndConfirmRequestWithCorrectProof({
+                    txb,
+                    type: `${moveCallZKEscrow.PACKAGE_ID}::my_hero::Hero`,
+                    policy_id: moveCallZKEscrow.POLICY_ID,
+                    transferRequest,
+                  })
+                  txb.transferObjects([claimedAsset], txb.pure(address, 'address'));
+
+                  const result = await signAndExecuteTransactionBlock({
+                    // @ts-ignore
+                    transactionBlock: txb,
+                  });
+                  const url = `https://suiexplorer.com/txblock/${result.digest}?network=testnet`;
+                  console.log(url);
+                }}
+              >
+                claim with correct proof
+              </button>
             </div>
           </div>
         </div>
