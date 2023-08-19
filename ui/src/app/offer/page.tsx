@@ -90,7 +90,7 @@ const Page = () => {
       <AppBar />
       <main className="flex justify-center mt-[120px]">
         <div className="text-white flex flex-col gap-[40px]">
-          <EnterpriseScreen address={address} signAndExecuteTransactionBlock={signAndExecuteTransactionBlock} />
+          <EnterpriseScreen />
           <PlayerScreen />
         </div>
       </main>

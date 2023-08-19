@@ -1,3 +1,4 @@
+import React from 'react';
 import { ConnectButton } from '@suiet/wallet-kit';
 import Link from 'next/link';
 

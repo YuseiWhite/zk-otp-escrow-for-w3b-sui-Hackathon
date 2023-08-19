@@ -74,7 +74,7 @@ export const attachProofPolicy = async (props: {
   });
 };
 
-let verifiedInputsSample = {
+const verifiedInputsSample = {
   vk_bytes: [
     84,
     150,
