@@ -6,6 +6,8 @@ module zk_escrow::proof_policy {
         TransferRequest
     };
 
+    use zk_escrow::verifier;
+
     const ERuleNotFound: u64 = 0;
     const EIsNotVerified: u64 = 1;
 
@@ -18,26 +20,16 @@ module zk_escrow::proof_policy {
         policy::add_rule(Rule {}, policy, cap, true);
     }
 
-    // This is not the function in the production environment.
-    fun verify_proof(
-        // expected that all arguments are taken off-chain
-        _vk: vector<u8>,
-        _public_inputs_bytes: vector<u8>,
-        _proof_points_bytes: vector<u8>,
-    ): bool {
-        true
-    }
-
     public fun prove<T>(
         policy: &TransferPolicy<T>,
         request: &mut TransferRequest<T>,
-        vk: vector<u8>,
+        vk_bytes: vector<u8>,
         public_inputs_bytes: vector<u8>,
         proof_points_bytes: vector<u8>,
 
     ) {
         assert!(policy::has_rule<T, Rule>(policy), ERuleNotFound);
-        let isVerified = verify_proof(vk, public_inputs_bytes, proof_points_bytes);
+        let isVerified = verifier::verify_proof(vk_bytes, public_inputs_bytes, proof_points_bytes);
         assert!(isVerified == true, EIsNotVerified);
         policy::add_receipt(Rule {}, request)
     }
@@ -67,7 +59,7 @@ module zk_escrow::proof_policy_test {
     fun test_proof() {
         let ctx = &mut tx_context::dummy();
         let (policy, cap) = policy_test::prepare(ctx);
-        proof_policy::set<Asset, Proof>(&mut policy, &cap);
+        proof_policy::add<Asset, Proof>(&mut policy, &cap);
 
         // `Asset` -> `Card` in production environment
         let request = policy::new_request<Asset>(
@@ -82,7 +74,6 @@ module zk_escrow::proof_policy_test {
         let inputs_bytes = x"440758042e68b76a376f2fecf3a5a8105edb194c3e774e5a760140305aec8849";
         let proof_bytes = x"a29981304df8e0f50750b558d4de59dbc8329634b81c986e28e9fff2b0faa52333b14a1f7b275b029e13499d1f5dd8ab955cf5fa3000a097920180381a238ce12df52207597eade4a365a6872c0a19a39c08a9bfb98b69a15615f90cc32660180ca32e565c01a49b505dd277713b1eae834df49643291a3601b11f56957bde02d5446406d0e4745d1bd32c8ccb8d8e80b877712f5f373016d2ecdeebb58caebc7a425b8137ebb1bd0c5b81c1d48151b25f0f24fe9602ba4e403811fb17db6f14";
         proof_policy::prove(
-            Proof {},
             &policy,
             &mut request,
             vk_bytes,

@@ -11,20 +11,37 @@ module zk_escrow::helpers {
     use sui::sui::SUI;
     use sui::display;
     use sui::package::{Self, Publisher};
+    use sui::event;
 
     use zk_escrow::utils;
     use zk_escrow::proof_policy;
 
+    struct LogObjectIdEvent has copy, drop {
+        object_id: ID,
+    }
+
+    public fun log_object_id<T: key>(
+        object: &T,
+    ) {
+        let object_id = object::id(object);
+        event::emit(LogObjectIdEvent {
+            object_id,
+        });
+    }
+
     public fun prove_and_claim<T>(
         policy: &mut TransferPolicy<T>,
         request: TransferRequest<T>,
+        vk_bytes: vector<u8>,
+        public_inputs_bytes: vector<u8>,
+        proof_points_bytes: vector<u8>,
     ) {
         proof_policy::prove<T>(
             policy,
             &mut request,
-            x"",
-            x"",
-            x"",
+            vk_bytes,
+            public_inputs_bytes,
+            proof_points_bytes,
         );
 
         transfer_policy::confirm_request<T>(

@@ -125,7 +125,7 @@ const EnterpriseScreen = () => {
                   `${moveCallZKEscrow.PACKAGE_ID}::my_hero::Hero`,
                   txb.pure(moveCallZKEscrow.KIOSK_ID),
                   txb.pure(moveCallZKEscrow.KIOSK_CAP_ID),
-                  txb.pure(moveCallZKEscrow.TARGET_ASSET_ID), // assetId
+                  // txb.pure(moveCallZKEscrow.TARGET_ASSET_ID), // assetId
                   BigInt(0),
                 );
                 const result = await signAndExecuteTransactionBlock({
@@ -150,7 +150,7 @@ const EnterpriseScreen = () => {
                   txb,
                   `${moveCallZKEscrow.PACKAGE_ID}::my_hero::Hero`,
                   txb.pure(moveCallZKEscrow.KIOSK_ID),
-                  moveCallZKEscrow.TARGET_ASSET_ID,
+                  // moveCallZKEscrow.TARGET_ASSET_ID,
                   zero_coin,
                 );
                 moveCallZKEscrow.resolveProofPolicyAndConfirmRequest({

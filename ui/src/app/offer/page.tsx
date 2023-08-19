@@ -61,11 +61,10 @@ const EnterpriseScreen = () => {
             >
               mint and list
             </button>
-
           </div>
         </div>
       </div>
-    </div >
+    </div>
   )
 }
 
