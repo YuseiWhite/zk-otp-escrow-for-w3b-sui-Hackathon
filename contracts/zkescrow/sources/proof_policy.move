@@ -9,16 +9,13 @@ module zk_escrow::proof_policy {
     const ERuleNotFound: u64 = 0;
     const EIsNotVerified: u64 = 1;
 
-    struct Rule<phantom Proof: drop> has drop {}
+    struct Rule has drop {}
 
-    /// `Config` is not required because there are no variables to be input by data_holder.
-
-    /// data holder action
-    public fun set<T, Proof: drop>(
+    public fun add<T>(
         policy: &mut TransferPolicy<T>,
         cap: &TransferPolicyCap<T>
     ) {
-        policy::add_rule(Rule<Proof> {}, policy, cap, true);
+        policy::add_rule(Rule {}, policy, cap, true);
     }
 
     // This is not the function in the production environment.
@@ -31,9 +28,7 @@ module zk_escrow::proof_policy {
         true
     }
 
-    /// user action
-    public fun prove<T, Proof: drop>(
-        _proof: Proof,
+    public fun prove<T>(
         policy: &TransferPolicy<T>,
         request: &mut TransferRequest<T>,
         vk: vector<u8>,
@@ -41,10 +36,10 @@ module zk_escrow::proof_policy {
         proof_points_bytes: vector<u8>,
 
     ) {
-        assert!(policy::has_rule<T, Rule<Proof>>(policy), ERuleNotFound);
+        assert!(policy::has_rule<T, Rule>(policy), ERuleNotFound);
         let isVerified = verify_proof(vk, public_inputs_bytes, proof_points_bytes);
         assert!(isVerified == true, EIsNotVerified);
-        policy::add_receipt(Rule<Proof> {}, request)
+        policy::add_receipt(Rule {}, request)
     }
 }
 

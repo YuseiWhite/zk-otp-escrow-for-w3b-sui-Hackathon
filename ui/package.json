@@ -11,6 +11,7 @@
     "lint": "eslint ./src --fix -c .eslintrc.json --ext js,ts,jsx,tsx --ignore-pattern='!.*'"
   },
   "dependencies": {
+    "@mysten/kiosk": "^0.5.1",
     "@suiet/wallet-kit": "^0.2.18",
     "autoprefixer": "10.4.15",
     "crypto-js": "^4.1.1",
