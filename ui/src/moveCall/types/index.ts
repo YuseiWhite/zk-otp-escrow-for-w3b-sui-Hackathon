@@ -5,7 +5,7 @@ type U64 = string
 /// Post型の定義
 export type SuitterPost = {
   id: ObjectId,
-  text: String,
+  text: string,
   created_at: U64,
   author: SuiAddress,
   count_likes: U64,

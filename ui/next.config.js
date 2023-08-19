@@ -2,7 +2,10 @@
 const nextConfig = {
   runtime: 'edge',
   images: {
-    domains: ['images.microcms-assets.io'],
+    domains: [
+      'storage.googleapis.com',
+      'user-images.githubusercontent.com',
+    ],
   },
   experimental: {
     appDir: true,
