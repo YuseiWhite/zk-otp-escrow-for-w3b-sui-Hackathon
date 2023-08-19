@@ -23,6 +23,18 @@ bun i
 circom main.circom --r1cs --wasm
 '''
 
+[tasks."dev:ui"]
+script = '''
+cd ui
+bun run dev
+'''
+
+[tasks."dev:prover-server"]
+script = '''
+cd prover
+cargo run --bin server
+'''
+
 [tasks."build:proof"]
 script = '''
 cd prover

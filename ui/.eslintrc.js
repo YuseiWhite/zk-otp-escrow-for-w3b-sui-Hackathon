@@ -1,7 +1,7 @@
-{
+module.exports = {
   "extends": [
     "next/core-web-vitals",
-    // "eslint:recommended",
+    "eslint:recommended",
     "plugin:react/recommended",
     "plugin:@typescript-eslint/recommended",
     // "plugin:jsx-a11y/recommended"
@@ -9,7 +9,7 @@
   "plugins": [
     "react",
     "@typescript-eslint",
-    "jsx-a11y",
+    // "jsx-a11y",
     "unused-imports"
   ],
   "parser": "@typescript-eslint/parser",
@@ -30,30 +30,35 @@
     "react/prop-types": "off",
     "@typescript-eslint/explicit-module-boundary-types": "off",
     "@typescript-eslint/no-unused-vars": [
-      "error",
+      "warn",
       {
         "argsIgnorePattern": "^_"
       }
     ],
-    "jsx-a11y/anchor-is-valid": [
-      "error",
-      {
-        "components": [
-          "Link"
-        ],
-        "specialLink": [
-          "hrefLeft",
-          "hrefRight"
-        ],
-        "aspects": [
-          "invalidHref",
-          "preferButton"
-        ]
-      }
-    ],
-    "no-console": "warn",
+    "@typescript-eslint/no-explicit-any": "off",
+    "@typescript-eslint/ban-ts-comment": "off",
+    // "jsx-a11y/anchor-is-valid": [
+    //   "error",
+    //   {
+    //     "components": [
+    //       "Link"
+    //     ],
+    //     "specialLink": [
+    //       "hrefLeft",
+    //       "hrefRight"
+    //     ],
+    //     "aspects": [
+    //       "invalidHref",
+    //       "preferButton"
+    //     ]
+    //   }
+    // ],
+    "no-console": "off",
     "react-hooks/rules-of-hooks": "error",
     "react-hooks/exhaustive-deps": "warn",
-    "unused-imports/no-unused-imports-ts": "error"
+    "unused-imports/no-unused-imports-ts": "warn",
+    "jsx-a11y/click-events-have-key-events": "off",
+    "jsx-a11y/no-static-element-interactions": "off",
+    "@typescript-eslint/ban-types": "off"
   }
 }

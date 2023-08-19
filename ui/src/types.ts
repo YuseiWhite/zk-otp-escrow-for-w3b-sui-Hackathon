@@ -17,3 +17,9 @@ export type NewsItem = {
 };
 
 export type NewsItemList = NewsItem[];
+
+export type VerifierInputs = {
+  vk: string;
+  public_inputs: string;
+  proof_points: string;
+}

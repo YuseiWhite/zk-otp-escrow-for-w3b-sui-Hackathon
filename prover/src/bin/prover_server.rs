@@ -9,12 +9,20 @@ use serde::Deserialize;
 use serde_json::json;
 use std::time::{SystemTime, UNIX_EPOCH};
 use std::{collections::HashMap, net::SocketAddr};
+use tower_http::cors::{Any, CorsLayer};
 
 #[tokio::main]
 async fn main() {
     let app = Router::new()
         .route("/get-proof-data", get(get_proof_data))
-        .route("/generate-proof", post(generate_proof));
+        .route("/generate-proof", post(generate_proof))
+        .layer(
+            CorsLayer::new()
+                // .allow_methods(vec![http::Method::GET, http::Method::POST])
+                // .allow_credentials(false
+                .allow_origin(Any)
+                .allow_headers(Any),
+        );
 
     let addr = SocketAddr::from(([127, 0, 0, 1], 8080));
     axum::Server::bind(&addr)
