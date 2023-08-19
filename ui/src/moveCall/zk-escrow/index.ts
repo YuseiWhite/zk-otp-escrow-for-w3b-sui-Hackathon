@@ -32,7 +32,7 @@ export const mintMyHero = (props: {
   sendToAddress: string;
 }) => {
   const { txb } = props;
-  let hero = txb.moveCall({
+  const hero = txb.moveCall({
     target: `${PACKAGE_ID}::my_hero::mint`,
     arguments: [
       txb.pure(props.name),
@@ -116,6 +116,20 @@ export const resolveProofPolicyAndConfirmRequest = async (props: {
       props.transferRequest,
     ],
   });
+
+  /// SHOULD BE
+  // moveCallZKEscrow.resolveProofPolicy({
+  //   txb,
+  //   type: `${moveCallZKEscrow.PACKAGE_ID}::my_hero::Hero`,
+  //   policy_id: "0xf20628c5e1472acbf54b3c3635322922b2aec649fd77e593f245ea901d3c1d80",
+  //   transferRequest,
+  // })
+  // moveCallKiosk.confirmRequest(
+  //   txb,
+  //   `${moveCallZKEscrow.PACKAGE_ID}::my_hero::Hero`,
+  //   "0xf20628c5e1472acbf54b3c3635322922b2aec649fd77e593f245ea901d3c1d80", // policy_id
+  //   transferRequest,
+  // )
 };
 
 export const moveCallZKOffer = async (props: {

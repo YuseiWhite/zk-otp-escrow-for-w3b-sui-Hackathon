@@ -1,7 +1,5 @@
 
-import { TransactionBlock } from '@mysten/sui.js';
-import { useWallet } from '@suiet/wallet-kit';
-import { Dispatch, SetStateAction, useState } from 'react';
+import { Dispatch, SetStateAction } from 'react';
 
 /**
  * ChatInput コンポーネント

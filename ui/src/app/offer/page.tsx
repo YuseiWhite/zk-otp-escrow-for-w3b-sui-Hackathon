@@ -1,21 +1,14 @@
 "use client";
 
-import { TransactionBlock } from '@mysten/sui.js';
+import { TransactionBlock } from "@mysten/sui.js/transactions";
 import * as moveCallKiosk from '@mysten/kiosk';
 import { useWallet } from '@suiet/wallet-kit';
 import Image from 'next/image';
-import { useState } from 'react';
-import toast, { Toaster } from 'react-hot-toast';
 import { AppBar } from 'src/components/AppBar';
-import ChatInput from 'src/components/ChatInput';
 import { CountdownTimer } from 'src/components/CountdonwTimer';
-// import { moveCallDoUnlock, moveCallDoZKUnlock, moveCallJustDo, moveCallMintAndTransferMyHero, moveCallMintMyHero, moveCallOffer, moveCallOffer2 } from 'src/moveCall/zk-escrow';
 import * as moveCallZKEscrow from 'src/moveCall/zk-escrow';
-import { generateOneTimeCode, hashWithSHA256, shortenAddress } from 'src/utils/web3';
 
 const imageUrl = "https://user-images.githubusercontent.com/14998939/256967328-b7870445-e873-416e-a1a0-ee1d60c7993c.jpg";
-
-const notify = () => toast('Here is your toast.!');
 
 const EnterpriseScreen = () => {
   const { address, signAndExecuteTransactionBlock } = useWallet();
@@ -38,153 +31,38 @@ const EnterpriseScreen = () => {
           alt='my hero'
           className='bg-gray-50 rounded-lg'
         />
-        <div className='flex flex-wrap gap-4'>
+        <div className='flex flex-col gap-8'>
+          <div className='flex flex-wrap gap-4'>
+            <button className="h-10 text-white text-xl bg-blue-500 rounded-md px-4 py-2 max-w-120"
+              onClick={async () => {
+                if (!address) return;
+                const txb = new TransactionBlock();
+                const hero = moveCallZKEscrow.mintMyHero({
+                  txb,
+                  name: "My Hero",
+                  imageUrl,
+                  sendToAddress: address,
+                });
+                moveCallKiosk.placeAndList(
+                  txb,
+                  `${moveCallZKEscrow.PACKAGE_ID}::my_hero::Hero`,
+                  txb.pure(moveCallZKEscrow.KIOSK_ID),
+                  txb.pure(moveCallZKEscrow.KIOSK_CAP_ID),
+                  hero,
+                  BigInt(0),
+                );
+                const result = await signAndExecuteTransactionBlock({
+                  // @ts-ignore
+                  transactionBlock: txb,
+                });
+                const url = `https://suiexplorer.com/txblock/${result.digest}?network=testnet`;
+                console.log(url);
+              }}
+            >
+              mint and list
+            </button>
 
-          <button className="h-10 text-white text-xl bg-blue-500 rounded-md px-4 py-2 max-w-120"
-            onClick={async () => {
-              if (!address) return;
-              const txb = new TransactionBlock();
-              let hero = moveCallZKEscrow.mintMyHero({
-                txb,
-                name: "My Hero",
-                imageUrl,
-                sendToAddress: address,
-              });
-              txb.transferObjects([hero], txb.pure(address));
-              const result = await signAndExecuteTransactionBlock({
-                // @ts-ignore
-                transactionBlock: txb,
-              });
-              const url = `https://suiexplorer.com/txblock/${result.digest}?network=testnet`;
-              console.log(url);
-            }}
-          >
-            mint Hero
-          </button>
-          <button className="h-10 text-white text-xl bg-blue-500 rounded-md px-4 py-2 max-w-120"
-            onClick={async () => {
-              if (!address) return;
-              const txb = new TransactionBlock();
-              txb.moveCall({
-                target: '0x2::kiosk::default'
-              });
-              const result = await signAndExecuteTransactionBlock({
-                // @ts-ignore
-                transactionBlock: txb,
-              });
-              const url = `https://suiexplorer.com/txblock/${result.digest}?network=testnet`;
-              console.log(url);
-            }}
-          >
-            open kiosk
-          </button>
-          <button className="h-10 text-white text-xl bg-blue-500 rounded-md px-4 py-2 max-w-120"
-            onClick={async () => {
-              if (!address) return;
-              const txb = new TransactionBlock();
-              moveCallKiosk.placeAndList(
-                txb,
-                `${moveCallZKEscrow.PACKAGE_ID}::my_hero::Hero`,
-                txb.pure(moveCallZKEscrow.KIOSK_ID),
-                txb.pure(moveCallZKEscrow.KIOSK_CAP_ID),
-                txb.pure(moveCallZKEscrow.TARGET_ASSET_ID), // assetId
-                BigInt(0),
-              );
-              const result = await signAndExecuteTransactionBlock({
-                // @ts-ignore
-                transactionBlock: txb,
-              });
-              const url = `https://suiexplorer.com/txblock/${result.digest}?network=testnet`;
-              console.log(url);
-            }}
-          >
-            place and list
-          </button>
-          <button className="h-10 text-white text-xl bg-blue-500 rounded-md px-4 py-2 max-w-120"
-            onClick={async () => {
-              if (!address) return;
-              const txb = new TransactionBlock();
-              let transferPolicyCap = moveCallKiosk.createTransferPolicy(
-                txb,
-                `${moveCallZKEscrow.PACKAGE_ID}::my_hero::Hero`,
-                txb.pure(moveCallZKEscrow.PUBLISHER_ID),
-              );
-              txb.transferObjects([transferPolicyCap], txb.pure(address, 'address'));
-              const result = await signAndExecuteTransactionBlock({
-                // @ts-ignore
-                transactionBlock: txb,
-              });
-              const url = `https://suiexplorer.com/txblock/${result.digest}?network=testnet`;
-              console.log(url);
-            }}
-          >
-            creat policy
-          </button>
-          <button className="h-10 text-white text-xl bg-blue-500 rounded-md px-4 py-2 max-w-120"
-            onClick={async () => {
-              if (!address) return;
-              const txb = new TransactionBlock();
-              moveCallZKEscrow.attachProofPolicy({
-                txb,
-                type: `${moveCallZKEscrow.PACKAGE_ID}::my_hero::Hero`,
-                policy_id: moveCallZKEscrow.POLICY_ID,
-                policy_cap_id: moveCallZKEscrow.POLICY_CAP_ID,
-              })
-              const result = await signAndExecuteTransactionBlock({
-                // @ts-ignore
-                transactionBlock: txb,
-              });
-              const url = `https://suiexplorer.com/txblock/${result.digest}?network=testnet`;
-              console.log(url);
-            }}
-          >
-            attach proof policy
-          </button>
-          <button className="h-10 text-white text-xl bg-blue-500 rounded-md px-4 py-2 max-w-120"
-            onClick={async () => {
-              if (!address) return;
-              const txb = new TransactionBlock();
-              const zero_coin = txb.moveCall({
-                target: '0x2::coin::zero',
-                typeArguments: ['0x2::sui::SUI'],
-              });
-              const [claimedAsset, transferRequest] = moveCallKiosk.purchase(
-                txb,
-                `${moveCallZKEscrow.PACKAGE_ID}::my_hero::Hero`,
-                txb.pure(moveCallZKEscrow.KIOSK_ID),
-                moveCallZKEscrow.TARGET_ASSET_ID,
-                zero_coin,
-              );
-              moveCallZKEscrow.resolveProofPolicyAndConfirmRequest({
-                txb,
-                type: `${moveCallZKEscrow.PACKAGE_ID}::my_hero::Hero`,
-                policy_id: moveCallZKEscrow.POLICY_ID,
-                transferRequest,
-              })
-              // moveCallZKEscrow.resolveProofPolicy({
-              //   txb,
-              //   type: `${moveCallZKEscrow.PACKAGE_ID}::my_hero::Hero`,
-              //   policy_id: "0xf20628c5e1472acbf54b3c3635322922b2aec649fd77e593f245ea901d3c1d80",
-              //   transferRequest,
-              // })
-              // moveCallKiosk.confirmRequest(
-              //   txb,
-              //   `${moveCallZKEscrow.PACKAGE_ID}::my_hero::Hero`,
-              //   "0xf20628c5e1472acbf54b3c3635322922b2aec649fd77e593f245ea901d3c1d80", // policy_id
-              //   transferRequest,
-              // )
-              txb.transferObjects([claimedAsset], txb.pure(address, 'address'));
-
-              const result = await signAndExecuteTransactionBlock({
-                // @ts-ignore
-                transactionBlock: txb,
-              });
-              const url = `https://suiexplorer.com/txblock/${result.digest}?network=testnet`;
-              console.log(url);
-            }}
-          >
-            resolve proof policy
-          </button>
+          </div>
         </div>
       </div>
     </div >

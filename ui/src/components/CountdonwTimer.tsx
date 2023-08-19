@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import CryptoJS from 'crypto-js';
 import { generateOneTimeCode, hashWithSHA256 } from 'src/utils/web3';
 
 export const CountdownTimer = (props: {

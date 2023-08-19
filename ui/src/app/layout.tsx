@@ -6,7 +6,7 @@ import {
   WalletProvider,
   AllDefaultWallets
 } from '@suiet/wallet-kit';
-import toast, { Toaster } from 'react-hot-toast';
+import { Toaster } from 'react-hot-toast';
 
 
 export default function RootLayout({

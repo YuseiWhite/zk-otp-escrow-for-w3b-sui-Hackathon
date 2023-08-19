@@ -5,7 +5,6 @@ import {
 } from '@suiet/wallet-kit';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
-import ChatInput from 'src/components/ChatInput';
 import { SuiObjectLinkButton } from 'src/components/SuiObjectLinkButton';
 import { SUITTER_PACKAGE_ID, SUITTER_RECENT_POSTS_OBJECT_ID } from 'src/config/constants';
 import { getRecentPostIdList, getRecentPostObjectList } from 'src/moveCall/client';
