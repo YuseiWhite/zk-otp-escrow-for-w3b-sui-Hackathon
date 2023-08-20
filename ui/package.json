@@ -8,7 +8,7 @@
     "start": "next start",
     "next": "next",
     "wrangler": "wrangler",
-    "lint": "eslint ./src --fix -c .eslintrc.json --ext js,ts,jsx,tsx --ignore-pattern='!.*'"
+    "lint": "eslint ./src --fix -c .eslintrc.js --ext js,ts,jsx,tsx --ignore-pattern='!.*'"
   },
   "dependencies": {
     "@mysten/kiosk": "^0.5.1",

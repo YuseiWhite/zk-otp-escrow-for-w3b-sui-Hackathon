@@ -1,18 +1,22 @@
 import React, { useState, useEffect } from 'react';
 import { generateOneTimeCode, hashWithSHA256 } from 'src/utils/web3';
+import { usePasscodeStore } from 'src/store';
 
 export const CountdownTimer = (props: {
   totalSeconds: number;
 }) => {
   const [seconds, setSeconds] = useState(props.totalSeconds);
   const [code, setCode] = useState(generateOneTimeCode());
+  const { passcode, setPasscode } = usePasscodeStore();
   const radius = 40;
   const circumference = 2 * Math.PI * radius;
   const offset = ((seconds / props.totalSeconds) * circumference) - circumference;
 
   useEffect(() => {
     if (seconds === 0) {
-      setCode(generateOneTimeCode()); // 30秒経過したら新しいコードを生成
+      const code = generateOneTimeCode()
+      setCode(code)
+      setPasscode(code)
       setSeconds(props.totalSeconds); // タイマーをリセット
       return;
     }

@@ -1,1 +1,1 @@
-{ "dependencies": { "crypto-js": "^4.1.1", "fs": "^0.0.1-security", "snarkjs": "^0.7.0" } }
+{ "dependencies": { "@mysten/sui.js": "^0.41.0", "crypto-js": "^4.1.1", "fs": "^0.0.1-security", "snarkjs": "^0.7.0" } }

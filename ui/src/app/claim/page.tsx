@@ -8,19 +8,24 @@ import Image from 'next/image';
 import { useState } from 'react';
 import { AppBar } from 'src/components/AppBar';
 import { ClaimableObjectIdInput, PasscodeInput } from 'src/components/ChatInput';
-import { sleep } from 'src/utils';
-import { useClaimabledObjectId } from "src/store";
+import { useClaimabledObjectId, usePasscodeStore, useVerifierInputsStore } from "src/store";
+import { CountdownTimer } from "src/components/CountdonwTimer";
+import { SHA256 } from "crypto-js";
+import { postGenerateProof } from "src/zkbuilder";
 
 const imageUrl = "https://user-images.githubusercontent.com/14998939/256967328-b7870445-e873-416e-a1a0-ee1d60c7993c.jpg"
 
-const Page = () => {
-  const { address } = useWallet();
+const ClaimScreen = () => {
+  const { address, signAndExecuteTransactionBlock } = useWallet();
   const [proofIsDone, setProofIsDone] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
+  const { passcode } = usePasscodeStore()
+  const { verifierInputs, setVerifierInputs } = useVerifierInputsStore()
+
   const claimableObjectId = useClaimabledObjectId((state) => state.objectId);
 
-  const MainPart = () => (
+  return (
     <div className="text-white flex flex-col gap-[40px]">
       <div className='bg-gray-800 px-10 py-5 rounded-2xl'>
         <div className='flex items-center justify-between pb-5'>
@@ -57,7 +62,13 @@ const Page = () => {
               <button className={`relative text-white bg-blue-500 rounded-md px-4 py-2 max-w-120 ${isLoading ? 'opacity-50 cursor-not-allowed' : ''}`}
                 onClick={async () => {
                   setIsLoading(true); // ローディング開始
-                  await sleep(3000);
+                  // await sleep(3000);
+                  const verifierInputs = await postGenerateProof({
+                    secret_code: Array.from(Buffer.from(passcode, 'hex')),
+                    public_hash: `${SHA256(passcode)}`,
+                  })
+                  console.log(verifierInputs)
+                  setVerifierInputs(verifierInputs)
                   setProofIsDone(true);
                   setIsLoading(false); // ローディング終了
                 }}
@@ -91,6 +102,7 @@ const Page = () => {
                     type: `${moveCallZKEscrow.PACKAGE_ID}::my_hero::Hero`,
                     policy_id: moveCallZKEscrow.POLICY_ID,
                     transferRequest,
+                    verifierInputs,
                   })
                   txb.transferObjects([claimedAsset], txb.pure(address, 'address'));
 
@@ -139,6 +151,7 @@ const Page = () => {
               >
                 claim with broken proof
               </button>
+
               <button className="h-10 text-white text-sm bg-blue-500 rounded-md px-4 py-2 max-w-120"
                 onClick={async () => {
                   if (!address) return;
@@ -179,14 +192,32 @@ const Page = () => {
       </div>
     </div>
   )
+}
 
-  const { signAndExecuteTransactionBlock } = useWallet();
+const SecretScreen = () => (
+  <div className='bg-gray-800 px-10 py-5 rounded-2xl'>
+    <div className='flex items-center justify-between pb-5'>
+      <span className='text-2xl text-yellow-300 font-bold '>
+        Player&apos;s screen
+      </span>
+      <span className='text-xl text-blue-200'>
+        (UI inside the game screen)
+      </span>
+    </div>
+    <CountdownTimer totalSeconds={30} />
+  </div>
+);
 
+
+const Page = () => {
   return (
     <div className="min-h-screen bg-yellow-900">
       <AppBar />
       <main className="flex justify-center mt-[120px]">
-        <MainPart />
+        <div className="text-white flex flex-col gap-[40px]">
+          <ClaimScreen />
+          <SecretScreen />
+        </div>
       </main>
     </div>
   )

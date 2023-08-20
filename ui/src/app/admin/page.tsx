@@ -120,14 +120,14 @@ const EnterpriseScreen = () => {
               onClick={async () => {
                 if (!address) return;
                 const txb = new TransactionBlock();
-                // moveCallKiosk.placeAndList(
-                //   txb,
-                //   `${moveCallZKEscrow.PACKAGE_ID}::my_hero::Hero`,
-                //   txb.pure(moveCallZKEscrow.KIOSK_ID),
-                //   txb.pure(moveCallZKEscrow.KIOSK_CAP_ID),
-                //   // txb.pure(moveCallZKEscrow.TARGET_ASSET_ID), // assetId
-                //   BigInt(0),
-                // );
+                moveCallKiosk.placeAndList(
+                  txb,
+                  `${moveCallZKEscrow.PACKAGE_ID}::my_hero::Hero`,
+                  txb.pure(moveCallZKEscrow.KIOSK_ID),
+                  txb.pure(moveCallZKEscrow.KIOSK_CAP_ID),
+                  txb.pure(moveCallZKEscrow.TARGET_ASSET_ID),
+                  BigInt(0),
+                );
                 const result = await signAndExecuteTransactionBlock({
                   // @ts-ignore
                   transactionBlock: txb,
@@ -146,32 +146,32 @@ const EnterpriseScreen = () => {
                   target: '0x2::coin::zero',
                   typeArguments: ['0x2::sui::SUI'],
                 });
-                // const [claimedAsset, transferRequest] = moveCallKiosk.purchase(
-                //   txb,
-                //   `${moveCallZKEscrow.PACKAGE_ID}::my_hero::Hero`,
-                //   txb.pure(moveCallZKEscrow.KIOSK_ID),
-                //   // moveCallZKEscrow.TARGET_ASSET_ID,
-                //   zero_coin,
-                // );
-                // moveCallZKEscrow.resolveProofPolicyAndConfirmRequest({
-                //   txb,
-                //   type: `${moveCallZKEscrow.PACKAGE_ID}::my_hero::Hero`,
-                //   policy_id: moveCallZKEscrow.POLICY_ID,
-                //   transferRequest,
-                // })
-                // moveCallZKEscrow.resolveProofPolicy({
-                //   txb,
-                //   type: `${moveCallZKEscrow.PACKAGE_ID}::my_hero::Hero`,
-                //   policy_id: "0xf20628c5e1472acbf54b3c3635322922b2aec649fd77e593f245ea901d3c1d80",
-                //   transferRequest,
-                // })
-                // moveCallKiosk.confirmRequest(
-                //   txb,
-                //   `${moveCallZKEscrow.PACKAGE_ID}::my_hero::Hero`,
-                //   "0xf20628c5e1472acbf54b3c3635322922b2aec649fd77e593f245ea901d3c1d80", // policy_id
-                //   transferRequest,
-                // )
-                // txb.transferObjects([claimedAsset], txb.pure(address, 'address'));
+                const [claimedAsset, transferRequest] = moveCallKiosk.purchase(
+                  txb,
+                  `${moveCallZKEscrow.PACKAGE_ID}::my_hero::Hero`,
+                  txb.pure(moveCallZKEscrow.KIOSK_ID),
+                  moveCallZKEscrow.TARGET_ASSET_ID,
+                  zero_coin,
+                );
+                moveCallZKEscrow.resolveProofPolicyAndConfirmRequestWithCorrectProof({
+                  txb,
+                  type: `${moveCallZKEscrow.PACKAGE_ID}::my_hero::Hero`,
+                  policy_id: moveCallZKEscrow.POLICY_ID,
+                  transferRequest,
+                })
+                moveCallZKEscrow.resolveProofPolicy({
+                  txb,
+                  type: `${moveCallZKEscrow.PACKAGE_ID}::my_hero::Hero`,
+                  policy_id: "0xf20628c5e1472acbf54b3c3635322922b2aec649fd77e593f245ea901d3c1d80",
+                  transferRequest,
+                })
+                moveCallKiosk.confirmRequest(
+                  txb,
+                  `${moveCallZKEscrow.PACKAGE_ID}::my_hero::Hero`,
+                  "0xf20628c5e1472acbf54b3c3635322922b2aec649fd77e593f245ea901d3c1d80", // policy_id
+                  transferRequest,
+                )
+                txb.transferObjects([claimedAsset], txb.pure(address, 'address'));
 
                 const result = await signAndExecuteTransactionBlock({
                   // @ts-ignore
